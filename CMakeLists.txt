@@ -22,24 +22,42 @@ target_compile_options(sqliteFfi PRIVATE
     $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-fno-exceptions>
 )
 
-if(AG_TRIPLE) # called from superbuild
-  message(STATUS "sqliteFfi: using superbuild triple = ${AG_TRIPLE}")
+message(STATUS "sqliteFfi: AG_TRIPLE = ${AG_TRIPLE}")
 
-  set_target_properties(sqliteFfi PROPERTIES
-    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/out/${AG_TRIPLE}/$<CONFIG>"
-    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/out/${AG_TRIPLE}/$<CONFIG>"
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/out/${AG_TRIPLE}/$<CONFIG>"
-  )
+set(DST "$<IF:$<BOOL:${AG_TRIPLE}>,${CMAKE_BINARY_DIR}/out/${AG_TRIPLE}/$<CONFIG>,${CMAKE_BINARY_DIR}>")
+set(AGDST "$<IF:$<BOOL:${AG_TRIPLE}>,${CMAKE_BINARY_DIR}/out/,${CMAKE_BINARY_DIR}>")
 
-  add_custom_command(TARGET sqliteFfi POST_BUILD
+set_target_properties(sqliteFfi PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY "${DST}"
+    LIBRARY_OUTPUT_DIRECTORY "${DST}"
+    RUNTIME_OUTPUT_DIRECTORY "${DST}"
+)
+
+add_custom_command(TARGET sqliteFfi POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${CMAKE_CURRENT_SOURCE_DIR}/sqliteFfi.ag"
-            "${CMAKE_BINARY_DIR}/out/sqliteFfi.ag")
-else()
-  message(STATUS "sqliteFfi: standalone build, standard layout")
+            "${AGDST}/sqliteFfi.ag"
+)
 
-  add_custom_command(TARGET sqliteFfi POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${CMAKE_CURRENT_SOURCE_DIR}/sqliteFfi.ag"
-            "${CMAKE_BINARY_DIR}/sqliteFfi.ag")
+if(WIN32)
+  if(DEFINED AG_TRIPLE)
+    set(DLL_TRIPLE "${AG_TRIPLE}")
+  else()
+    set(DLL_TRIPLE "${VCPKG_TARGET_TRIPLET}")
+  endif()
+  if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR CONFIG STREQUAL "Debug")
+    find_file(SQLITE3_DLL_DBG NAMES sqlite3.dll PATHS "${CMAKE_BINARY_DIR}/vcpkg_installed/${DLL_TRIPLE}/debug/bin" NO_DEFAULT_PATH)
+    add_custom_command(TARGET sqliteFfi POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${SQLITE3_DLL_DBG}" "${DST}/sqlite3.dll"
+    )
+    find_file(SQLITE3_PDB_DBG NAMES sqlite3.pdb PATHS "${CMAKE_BINARY_DIR}/vcpkg_installed/${DLL_TRIPLE}/debug/bin" NO_DEFAULT_PATH)
+    add_custom_command(TARGET sqliteFfi POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${SQLITE3_PDB_DBG}" "${DST}/sqlite3.pdb"
+    )
+  else()
+    find_file(SQLITE3_DLL_REL NAMES sqlite3.dll PATHS "${CMAKE_BINARY_DIR}/vcpkg_installed/${DLL_TRIPLE}/bin" NO_DEFAULT_PATH)
+    add_custom_command(TARGET sqliteFfi POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${SQLITE3_DLL_REL}" "${DST}/sqlite3.dll"
+    )
+  endif()
 endif()
