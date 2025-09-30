@@ -22,10 +22,8 @@ target_compile_options(sqliteFfi PRIVATE
     $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-fno-exceptions>
 )
 
-message(STATUS "sqliteFfi: AG_TRIPLE = ${AG_TRIPLE}")
-
-set(DST "$<IF:$<BOOL:${AG_TRIPLE}>,${CMAKE_BINARY_DIR}/out/${AG_TRIPLE}/$<CONFIG>,${CMAKE_BINARY_DIR}>")
-set(AGDST "$<IF:$<BOOL:${AG_TRIPLE}>,${CMAKE_BINARY_DIR}/out/,${CMAKE_BINARY_DIR}>")
+set(DST "$<IF:$<BOOL:${AG_TRIPLE}>,${AG_OUT_DIR}/${AG_TRIPLE}/$<CONFIG>,${CMAKE_BINARY_DIR}>")
+set(AG_DST "$<IF:$<BOOL:${AG_TRIPLE}>,${AG_OUT_DIR},${CMAKE_BINARY_DIR}>")
 
 set_target_properties(sqliteFfi PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY "${DST}"
@@ -36,7 +34,7 @@ set_target_properties(sqliteFfi PROPERTIES
 add_custom_command(TARGET sqliteFfi POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${CMAKE_CURRENT_SOURCE_DIR}/sqliteFfi.ag"
-            "${AGDST}/sqliteFfi.ag"
+            "${AG_DST}/sqliteFfi.ag"
 )
 
 if(WIN32)

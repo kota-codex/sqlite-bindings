@@ -1,5 +1,5 @@
 {
-  "name": "argentum",
+  "name": "sqlite-ffi",
   "version": "0.0.30",
-  "dependencies": ["sqlite3"]
+  "dependencies": [ "sqlite3" ]
 }
