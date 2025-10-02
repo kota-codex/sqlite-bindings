@@ -6,7 +6,7 @@ if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   MESSAGE(FATAL_ERROR "Toolchain file not set, try using: cmake --preset default")
 endif()
 
-add_subdirectory(external/ag-ffi-header)
+add_subdirectory(extern/ag-ffi-header)
 
 find_package(unofficial-sqlite3 CONFIG REQUIRED)
 
