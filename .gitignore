@@ -1,5 +1,7 @@
 # Prerequisites
 *.d
+extern
+build
 
 # Compiled Object files
 *.slo
