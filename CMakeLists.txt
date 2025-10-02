@@ -12,6 +12,6 @@ find_package(unofficial-sqlite3 CONFIG REQUIRED)
 
 add_library (sqliteFfi STATIC sqlite-ffi.c)
 
-target_link_libraries(sqliteFfi PRIVATE unofficial::sqlite3::sqlite3)
+target_link_libraries(sqliteFfi PUBLIC unofficial::sqlite3::sqlite3)
 
 ag_ffi_configure_target(sqliteFfi sqliteFfi.ag)
