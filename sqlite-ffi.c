@@ -59,7 +59,7 @@ double ag_m_sqliteFfi_Row_sqliteFfi_doubleAt(AgSqliteQuery* q, int at) {
 
 AgString* ag_m_sqliteFfi_Row_sqliteFfi_stringAt(AgSqliteQuery* q, int at) {
     return ag_make_str(
-        sqlite3_column_text(q->stmt, at),
+        (const char*) sqlite3_column_text(q->stmt, at),
         sqlite3_column_bytes(q->stmt, at));
 }
 
