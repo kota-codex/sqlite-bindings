@@ -1,0 +1,7 @@
+on:
+  push:
+    tags:
+      - 'v.*'
+jobs:
+  call-shared:
+    uses: kota-codex/ag-modules-ci/.github/workflows/build.yml@main
