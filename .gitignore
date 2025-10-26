@@ -1,3 +1,4 @@
 .vs*
 ag-ffi-header
 build
+out
