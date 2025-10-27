@@ -1,6 +1,6 @@
 ﻿cmake_minimum_required(VERSION 3.15)
 
-project ("sqliteFfi LANGUAGES C")
+project (sqliteFfi LANGUAGES C)
 
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   MESSAGE(FATAL_ERROR "Toolchain file not set, try using: cmake --preset default")
