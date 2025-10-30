@@ -6,4 +6,4 @@ permissions:
   contents: write
 jobs:
   call-shared:
-    uses: kota-codex/ag-modules-ci/.github/workflows/build.yml@main
+    uses: kota-codex/ag-modules-ci/.github/workflows/release.yml@main
