@@ -1,9 +1,5 @@
 on:
-  push:
-    tags:
-      - 'v.*'
-permissions:
-  contents: write
+  workflow_dispatch:
 jobs:
-  call-shared:
-    uses: kota-codex/ag-modules-ci/.github/workflows/release.yml@main
+  call-shared: #fills caches if launched from main
+    uses: kota-codex/ag-modules-ci/.github/workflows/build.yml@main
