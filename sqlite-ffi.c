@@ -72,22 +72,16 @@ void ag_m_sqliteFfi_Row_sqliteFfi_blobAt(AgSqliteQuery* q, int at, AgBlob* resul
     ag_memcpy(result->bytes, r, size);
 }
 
-AgSqliteQuery* ag_m_sqliteFfi_Query_sqliteFfi_setString(AgSqliteQuery* q, int at, AgString* val) {
+void ag_m_sqliteFfi_Query_sqliteFfi_setString(AgSqliteQuery* q, int at, AgString* val) {
     sqlite3_bind_text(q->stmt, at, val->chars, (int) strlen(val->chars), SQLITE_TRANSIENT);  // TODO: optimize after String/Cursor refactoring
-    ag_retain_pin_nn(&q->header);
-    return q;
 }
 
-AgSqliteQuery* ag_m_sqliteFfi_Query_sqliteFfi_setBlob(AgSqliteQuery* q, int at, AgBlob* val) {
+void ag_m_sqliteFfi_Query_sqliteFfi_setBlob(AgSqliteQuery* q, int at, AgBlob* val) {
     sqlite3_bind_blob(q->stmt, at, val->bytes, (int) val->bytes_count, SQLITE_TRANSIENT); // It's mutable, so copy
-    ag_retain_pin_nn(&q->header);
-    return q;
 }
 
-AgSqliteQuery* ag_m_sqliteFfi_Query_sqliteFfi_setInt(AgSqliteQuery* q, int at, int64_t val) {
+void ag_m_sqliteFfi_Query_sqliteFfi_setInt(AgSqliteQuery* q, int at, int64_t val) {
     sqlite3_bind_int64(q->stmt, at, val);
-    ag_retain_pin_nn(&q->header);
-    return q;
 }
 
 bool ag_m_sqliteFfi_Query_sqliteFfi_internalStep(AgSqliteQuery* q) {

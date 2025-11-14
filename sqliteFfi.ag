@@ -2,7 +2,7 @@ using sys { String, Blob }
 
 class Sqlite {
     internal = 0;
-    open(fileName str, flags int) ?Sqlite;
+    open(fileName str, flags int) ?Sqlite;  /returns this on success
     query(sql str, flags int) Query {
         r = Query;
         internalQuery(r, sql, flags);
