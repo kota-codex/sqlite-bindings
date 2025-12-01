@@ -1,26 +1,26 @@
 using sys { String, Blob }
 
 class Sqlite {
-    internal = 0;
     open(fileName str, flags int) ?Sqlite;  // returns this on success
     query(sql str, flags int) Query {
         r = Query;
-        internalQuery(r, sql, flags);
+        _query(r, sql, flags);
         r
     }
-    internalQuery(q Query, sql str, flags int);
+    _handle = sys_handle;
+    _query(q Query, sql str, flags int);
 }
-fn afterCopySqlite(c Sqlite) { c.internal := 0; }
+fn afterCopySqlite(c Sqlite) { c._handle := sys_handle; }
 fn disposeSqlite(c Sqlite);
 
 class Row{
-    internal = 0;
     intAt(at int) int;
     doubleAt(at int) double;
     stringAt(at int) str;
     blobAt(at int, result Blob);
+    _handle = sys_handle;
 }
-fn afterCopyRow(r Row) { r.internal := 0; }
+fn afterCopyRow(r Row) { r._handle := sys_handle; }
 fn disposeRow(r Row);
 
 class Query {
@@ -29,7 +29,7 @@ class Query {
     setInt(at int, val int) this;
     setBlob(at int, val int) this;
     execute(onRow(Row)) {
-        loop !(internalStep() ? onRow(this))
+        loop !(_step() ? onRow(this))
     }
-    internalStep() bool;
+    _step() bool;
 }

@@ -32,7 +32,7 @@ void ag_fn_sqliteFfi_disposeSqlite(AgSqlite* con) {
         sqlite3_close_v2(con->con);
 }
 
-AgSqliteQuery* ag_m_sqliteFfi_Sqlite_sqliteFfi_internalQuery(
+AgSqliteQuery* ag_m_sqliteFfi_Sqlite_sqliteFfi__query(
     AgSqlite* con,
     AgSqliteQuery* q,
     AgString* sql,
@@ -84,7 +84,7 @@ void ag_m_sqliteFfi_Query_sqliteFfi_setInt(AgSqliteQuery* q, int at, int64_t val
     sqlite3_bind_int64(q->stmt, at, val);
 }
 
-bool ag_m_sqliteFfi_Query_sqliteFfi_internalStep(AgSqliteQuery* q) {
+bool ag_m_sqliteFfi_Query_sqliteFfi__step(AgSqliteQuery* q) {
     if (sqlite3_step(q->stmt) == SQLITE_ROW)
         return true;
     // TODO: add error handling/logging
